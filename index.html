@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0016DE">
+<link rel="icon" type="image/svg+xml" href="assets\pnsa_mga.jpg">
+<title>Paróquia Nossa Senhora Aparecida — Maringá</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-light:#18ACFF;
+    --blue-dark:#0016DE;
+    --black:#070A14;
+    --offwhite:#F3F5FA;
+    --glass:rgba(243,245,250,0.06);
+    --glass-strong:rgba(243,245,250,0.11);
+    --glass-border:rgba(243,245,250,0.15);
+    --shadow:rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html,body{
+    height:100%;
+    background:var(--black);
+    color:var(--offwhite);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* ---------- ambient wallpaper ---------- */
+  .wallpaper{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    overflow:hidden;
+    background:var(--black);
+    contain:paint;
+  }
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(75px);
+    opacity:0.5;
+    will-change:transform;
+    transform:translateZ(0);
+    backface-visibility:hidden;
+  }
+  .blob--a{
+    width:60vmax;height:60vmax;
+    top:-26vmax; left:-22vmax;
+    background:radial-gradient(circle at 30% 30%, var(--blue-light), transparent 70%);
+    animation:drift1 24s ease-in-out infinite alternate;
+  }
+  .blob--b{
+    width:55vmax;height:55vmax;
+    bottom:-24vmax; right:-18vmax;
+    background:radial-gradient(circle at 70% 70%, var(--blue-dark), transparent 70%);
+    animation:drift2 28s ease-in-out infinite alternate;
+  }
+  @keyframes drift1{
+    from{transform:translate3d(0,0,0) scale(1);}
+    to{transform:translate3d(5vmax,4vmax,0) scale(1.07);}
+  }
+  @keyframes drift2{
+    from{transform:translate3d(0,0,0) scale(1);}
+    to{transform:translate3d(-5vmax,-5vmax,0) scale(1.05);}
+  }
+  @media (hover:none) and (pointer:coarse), (max-width:600px){
+    .blob{ animation:none; }
+  }
+
+  .grain{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    opacity:0.04;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-repeat:repeat;
+    background-size:180px 180px;
+    transform:translateZ(0);
+  }
+
+  /* ---------- layout ---------- */
+  .page{
+    position:relative;
+    z-index:2;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:clamp(24px,7vw,56px) 18px 48px;
+  }
+  .card{
+    width:100%;
+    max-width:440px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:26px;
+  }
+
+  .island{
+    width:88px; height:26px;
+    background:rgba(0,0,0,0.55);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    backdrop-filter:blur(12px);
+  }
+  .island span{ width:5px; height:5px; border-radius:50%; background:var(--glass-border); }
+  .island span:first-child{ width:8px; background:linear-gradient(90deg,var(--blue-light),var(--blue-dark)); }
+
+  /* ---------- header ---------- */
+  .avatar{
+    width:104px; height:104px;
+    border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, var(--blue-light), var(--blue-dark) 78%);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+    box-shadow:0 20px 42px -14px var(--shadow), 0 0 0 4px rgba(24,172,255,0.14);
+  }
+  .avatar::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(120deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 32%);
+  }
+  .avatar svg{ width:56px; height:56px; position:relative; z-index:1; }
+  /* TODO: pra usar a foto real, troque o <svg> acima por:
+     <img src="foto-perfil.jpg" alt="Paróquia Nossa Senhora Aparecida" style="width:100%;height:100%;object-fit:cover;"> */
+
+  .identity{ text-align:center; display:flex; flex-direction:column; gap:6px; }
+  .name{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(22px,6vw,27px);
+    letter-spacing:-0.01em;
+    line-height:1.15;
+  }
+  .role{ font-size:13.5px; font-weight:500; color:rgba(243,245,250,0.6); letter-spacing:0.02em; }
+  .bioline{ font-size:14.5px; font-weight:500; color:var(--offwhite); margin-top:2px; font-style:italic; }
+
+  .locality{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
+    color:rgba(243,245,250,0.5);
+    text-decoration:none;
+    margin-top:4px;
+    transition:color .3s ease;
+  }
+  .locality:hover{ color:var(--blue-light); }
+  .locality svg{ width:11px; height:11px; flex-shrink:0; }
+
+  /* ---------- section eyebrow ---------- */
+  .section{ width:100%; display:flex; flex-direction:column; gap:12px; }
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:11.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+    color:rgba(243,245,250,0.45);
+  }
+  .eyebrow::after{ content:''; flex:1; height:1px; background:var(--glass-border); }
+
+  /* ---------- accordion panels ---------- */
+  .panel{
+    width:100%;
+    border-radius:20px;
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    overflow:hidden;
+  }
+  .panel summary{
+    list-style:none;
+    cursor:pointer;
+    display:flex; align-items:center; gap:14px;
+    padding:16px 18px;
+  }
+  .panel summary::-webkit-details-marker{ display:none; }
+  .panel .icon{
+    flex-shrink:0; width:38px; height:38px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(24,172,255,0.14); color:var(--blue-light);
+  }
+  .panel .icon svg{ width:19px; height:19px; }
+  .panel-title{ font-weight:700; font-size:14.5px; flex:1; }
+  .panel-sub{ font-size:11.5px; color:rgba(243,245,250,0.45); font-weight:500; }
+  .chevron{ flex-shrink:0; opacity:0.5; transition:transform .3s ease; }
+  .chevron svg{ width:15px; height:15px; }
+  details[open] .chevron{ transform:rotate(180deg); }
+
+  .panel-body{ padding:0 18px 16px; }
+
+  .schedule-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:11px 0;
+    border-top:1px solid var(--glass-border);
+  }
+  .schedule-when{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .schedule-day{ font-size:13.5px; font-weight:600; }
+  .schedule-note{ font-size:11.5px; color:rgba(243,245,250,0.5); }
+  .time-pills{ display:flex; gap:6px; flex-shrink:0; }
+  .time-pill{
+    font-size:12px; font-weight:700;
+    color:var(--blue-light);
+    background:rgba(24,172,255,0.14);
+    border:1px solid rgba(24,172,255,0.32);
+    padding:5px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  /* grupos de oração */
+  .group-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:12px 0;
+    border-top:1px solid var(--glass-border);
+  }
+  .group-text{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .group-name{ font-size:13.5px; font-weight:600; }
+  .group-time{ font-size:11.5px; color:rgba(243,245,250,0.5); }
+  .ig-btn{
+    flex-shrink:0; width:34px; height:34px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(243,245,250,0.4);
+    border:1px dashed var(--glass-border);
+    text-decoration:none;
+  }
+  .ig-btn svg{ width:16px; height:16px; }
+  /* quando tiver o @ de cada grupo: tirar o border dashed, trocar href e usar accent-blue */
+  .ig-btn.ready{ border-style:solid; color:var(--blue-light); background:rgba(24,172,255,0.14); }
+
+  /* ---------- contact / action cards ---------- */
+  .links{ width:100%; display:flex; flex-direction:column; gap:14px; }
+
+  .linkcard{
+    position:relative;
+    display:flex; align-items:center; gap:16px;
+    width:100%;
+    padding:16px 18px;
+    border-radius:20px;
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    text-decoration:none;
+    color:var(--offwhite);
+    font-family:inherit;
+    text-align:left;
+    overflow:hidden;
+    isolation:isolate;
+    transform:translateZ(0);
+    will-change:transform;
+    transition:transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .linkcard::before{
+    content:''; position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(115deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 35%);
+  }
+  .linkcard::after{
+    content:''; position:absolute; top:0; bottom:0; left:-60%; width:40%;
+    background:linear-gradient(115deg, transparent, rgba(255,255,255,0.22), transparent);
+    transform:skewX(-20deg);
+    transition:left 0.7s ease;
+  }
+  .linkcard:hover, .linkcard:focus-visible{
+    transform:translateY(-3px) translateZ(0);
+    background:var(--glass-strong);
+    box-shadow:0 16px 30px -14px var(--shadow);
+    border-color:rgba(24,172,255,0.5);
+  }
+  .linkcard:hover::after, .linkcard:focus-visible::after{ left:120%; }
+  .linkcard:focus-visible{ outline:2px solid var(--offwhite); outline-offset:3px; }
+
+  .icon{ flex-shrink:0; width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; background:rgba(24,172,255,0.14); color:var(--blue-light); }
+  .icon svg{ width:20px; height:20px; }
+
+  .linktext{ display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; }
+  .linktitle{ font-weight:700; font-size:15px; }
+  .linksub{ font-size:12.5px; color:rgba(243,245,250,0.55); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .linksub.wrap{ white-space:normal; line-height:1.4; }
+
+  .arrow{ margin-left:auto; flex-shrink:0; opacity:0.5; transition:transform 0.35s ease, opacity 0.35s ease; }
+  .linkcard:hover .arrow{ transform:translateX(3px); opacity:0.9; }
+  .arrow svg{ width:16px; height:16px; }
+
+  .pix-note{ font-size:11px; color:rgba(243,245,250,0.45); margin-top:2px; }
+  .copy-pill{
+    margin-left:auto; flex-shrink:0;
+    font-size:11px; font-weight:700; letter-spacing:0.03em;
+    padding:6px 10px; border-radius:999px;
+    background:rgba(24,172,255,0.16);
+    border:1px solid rgba(24,172,255,0.4);
+    color:var(--blue-light);
+    transition:background .3s ease, color .3s ease;
+  }
+  .linkcard.copied .copy-pill{ background:var(--blue-light); color:var(--black); }
+
+  footer{
+    margin-top:6px;
+    font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:rgba(243,245,250,0.35);
+    text-align:center;
+    line-height:1.7;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .blob{ animation:none; }
+    .linkcard, .linkcard::after, .arrow, .chevron{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="wallpaper">
+    <div class="blob blob--a"></div>
+    <div class="blob blob--b"></div>
+  </div>
+  <div class="grain"></div>
+
+  <main class="page">
+    <div class="card">
+
+      <div class="island"><span></span><span></span></div>
+
+      <!-- ===== cabeçalho ===== -->
+      <div class="avatar">
+            <div class="avatar">
+                <img src="assets\pnsa_mga.jpg" alt="Paróquia Nossa Senhora Aparecida" style="width:100%;height:100%;object-fit:cover;">
+            </div>
+   
+    </div>
+
+      <div class="identity">
+        <div class="name">Paróquia Nossa Senhora Aparecida</div>
+        <div class="role">Paróquia — Arquidiocese de Maringá</div>
+        <div class="bioline">"Fazei tudo o que Ele vos disser" João 2,5</div>
+        <a class="locality" href="https://www.google.com/maps/search/?api=1&query=Igreja+Matriz+Paróquia+Nossa+Senhora+Aparecida,+Praça+Nossa+Senhora+Aparecida,+Vila+Esperança,+Maringá+-+PR" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Vila Esperança, Maringá
+        </a>
+      </div>
+
+      <!-- ===== Igreja Matriz ===== -->
+      <div class="section">
+        <div class="eyebrow">Igreja Matriz</div>
+
+        <details class="panel" open>
+          <summary>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4"></path><path d="M8 8h8l2 12H6L8 8z"></path><path d="M10 12h4"></path></svg></span>
+            <span class="panel-title">Missas</span>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          </summary>
+          <div class="panel-body">
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Sexta-feira</span></div>
+              <div class="time-pills"><span class="time-pill">07h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Sábado</span></div>
+              <div class="time-pills"><span class="time-pill">19h30</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Domingo</span></div>
+              <div class="time-pills"><span class="time-pill">08h</span><span class="time-pill">18h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">1ª sexta-feira do mês</span>
+                <span class="schedule-note">Missa do Sagrado Coração de Jesus</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">20h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">1º domingo do mês</span>
+                <span class="schedule-note">Missa com as Crianças</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">10h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">Dia 12 de cada mês</span>
+                <span class="schedule-note">Missa da Padroeira N. Sra. Aparecida</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">20h</span></div>
+            </div>
+          </div>
+        </details>
+
+        <details class="panel">
+          <summary>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3"></circle></svg></span>
+            <span class="panel-title">Devoções &amp; Terços</span>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          </summary>
+          <div class="panel-body">
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">1º sábado do mês</span>
+                <span class="schedule-note">Mil Ave-Marias</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">07h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">2º sábado do mês</span>
+                <span class="schedule-note">Adoração ao Santíssimo</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">06h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">Quinta-feira</span>
+                <span class="schedule-note">Terço dos Homens</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">20h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">Último sábado do mês</span>
+                <span class="schedule-note">Terço da Misericórdia</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">15h</span></div>
+            </div>
+          </div>
+        </details>
+
+        <details class="panel">
+          <summary>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.56L3 20l1.06-5.44A8.5 8.5 0 1 1 21 11.5z"></path><path d="M9 10h.01"></path><path d="M12 10h.01"></path><path d="M15 10h.01"></path></svg></span>
+            <span class="panel-title">Atendimento &amp; Confissões</span>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          </summary>
+          <div class="panel-body">
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Quarta-feira</span></div>
+              <div class="time-pills"><span class="time-pill">14h–16h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Sexta-feira</span></div>
+              <div class="time-pills"><span class="time-pill">08h30–11h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Sábado</span></div>
+              <div class="time-pills"><span class="time-pill">08h30–11h</span></div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- ===== Capela N. Sra. de Fátima ===== -->
+      <div class="section">
+        <div class="eyebrow">Capela N. Sra. de Fátima</div>
+        <details class="panel">
+          <summary>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4"></path><path d="M8 8h8l2 12H6L8 8z"></path><path d="M10 12h4"></path></svg></span>
+            <span class="panel-title">Missas</span>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          </summary>
+          <div class="panel-body">
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Quarta-feira</span></div>
+              <div class="time-pills"><span class="time-pill">20h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when"><span class="schedule-day">Domingo</span></div>
+              <div class="time-pills"><span class="time-pill">10h</span></div>
+            </div>
+            <div class="schedule-row">
+              <div class="schedule-when">
+                <span class="schedule-day">Dia 13 de cada mês</span>
+                <span class="schedule-note">Missa em honra a N. Sra. de Fátima</span>
+              </div>
+              <div class="time-pills"><span class="time-pill">20h</span></div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- ===== Grupos de Oração ===== -->
+      <div class="section">
+        <div class="eyebrow">Grupos de Oração</div>
+        <details class="panel">
+          <summary>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+            <span class="panel-title">Grupos</span>
+            <span class="panel-sub">3 grupos</span>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          </summary>
+          <div class="panel-body">
+            <div class="group-row">
+              <div class="group-text">
+                <span class="group-name">JDM — Jovens de Maria</span>
+                <span class="group-time">Todo domingo, 19h30</span>
+              </div>
+              <!-- TODO: colocar o @ do Instagram do JDM aqui e trocar href="#" -->
+              <a class="ig-btn" href="https://www.instagram.com/jdm.jovensdemaria/" aria-disabled="true" title="@jdm.jovensdemaria">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"></circle></svg>
+              </a>
+            </div>
+            <div class="group-row">
+              <div class="group-text">
+                <span class="group-name">Grupo de oração Caminhando com Maria</span>
+                <span class="group-time">Toda segunda-feira, 20h</span>
+              </div>
+              <!-- TODO: colocar o @ do Instagram aqui e trocar href="#" -->
+              <a class="ig-btn" href="https://www.instagram.com/grupocaminhandocommariamga/" aria-disabled="true" title="@grupocaminhandocommariamga">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"></circle></svg>
+              </a>
+            </div>
+            <div class="group-row">
+              <div class="group-text">
+                <span class="group-name">Nossa Senhora de Pentecostes</span>
+                <span class="group-time">Toda terça-feira, 20h</span>
+              </div>
+              <!-- TODO: colocar o @ do Instagram aqui e trocar href="#" -->
+              <a class="ig-btn" href="https://www.instagram.com/gonspentecostes_mga/" aria-disabled="true" title="@gonspentecostes_mga">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"></circle></svg>
+              </a>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- ===== Contato & Ofertas ===== -->
+      <div class="section">
+        <div class="eyebrow">Contato &amp; Ofertas</div>
+        <nav class="links">
+
+          <button type="button" class="linkcard" id="pixCard" onclick="copyPix(this)">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></span>
+            <span class="linktext">
+              <span class="linktitle">Dízimo &amp; Ofertas — Pix</span>
+              <span class="linksub wrap">Chave (CNPJ) 79.154.076/0050-00 · Mitra Arquidiocesana de Maringá. Informe a finalidade na observação do Pix.</span>
+            </span>
+            <span class="copy-pill">Copiar</span>
+          </button>
+
+          <a class="linkcard" href="https://www.ave12.com.br" target="_blank" rel="noopener noreferrer">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v6a5 5 0 0 1-10 0V4z"></path><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.5 4 4 4"></path><path d="M17 6h3a1 1 0 0 1 1 1c0 2.5-1.5 4-4 4"></path></svg></span>
+            <span class="linktext">
+              <span class="linktitle">Show de Prêmios</span>
+              <span class="linksub">ave12.com.br</span>
+            </span>
+            <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+          </a>
+
+          <a class="linkcard" href="https://wa.me/554432670484" target="_blank" rel="noopener noreferrer">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.56L3 20l1.06-5.44A8.5 8.5 0 1 1 21 11.5z"></path></svg></span>
+            <span class="linktext">
+              <span class="linktitle">Telefone</span>
+              <span class="linksub">(44) 3267-0484</span>
+            </span>
+            <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+          </a>
+
+          <a class="linkcard" href="https://wa.me/5544984230760" target="_blank" rel="noopener noreferrer">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.56L3 20l1.06-5.44A8.5 8.5 0 1 1 21 11.5z"></path></svg></span>
+            <span class="linktext">
+              <span class="linktitle">WhatsApp</span>
+              <span class="linksub">(44) 98423-0760</span>
+            </span>
+            <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+          </a>
+
+          <a class="linkcard" href="https://www.facebook.com/pnsa.maringa" target="_blank" rel="noopener noreferrer">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></span>
+            <span class="linktext">
+              <span class="linktitle">Facebook</span>
+              <span class="linksub">@pnsa.maringa</span>
+            </span>
+            <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+          </a>
+
+          <a class="linkcard" href="https://www.google.com/maps/search/?api=1&query=Igreja+Matriz+Paróquia+Nossa+Senhora+Aparecida,+Praça+Nossa+Senhora+Aparecida,+Vila+Esperança,+Maringá+-+PR" target="_blank" rel="noopener noreferrer">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+            <span class="linktext">
+              <span class="linktitle">Como chegar</span>
+              <span class="linksub">Praça N. Sra. Aparecida, Vila Esperança</span>
+            </span>
+            <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+          </a>
+
+        </nav>
+      </div>
+
+      <footer>Paróquia Nossa Senhora Aparecida<br>Arquidiocese de Maringá · 2026</footer>
+
+    </div>
+  </main>
+
+  <script>
+    function copyPix(btn){
+      var key = '79.154.076/0050-00';
+      var pill = btn.querySelector('.copy-pill');
+      var original = pill.textContent;
+      function done(ok){
+        pill.textContent = ok ? 'Copiado!' : 'Copie: ' + key;
+        btn.classList.toggle('copied', ok);
+        setTimeout(function(){
+          pill.textContent = original;
+          btn.classList.remove('copied');
+        }, 2200);
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(key).then(function(){ done(true); }).catch(function(){ done(false); });
+      } else {
+        try{
+          var ta = document.createElement('textarea');
+          ta.value = key;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done(true);
+        }catch(e){ done(false); }
+      }
+    }
+  </script>
+
+</body>
+</html>
